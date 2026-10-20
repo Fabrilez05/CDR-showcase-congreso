@@ -131,6 +131,28 @@ En los modos *stutter*, mantener **R2** desactiva el efecto para tener tracción
 
 ---
 
+## Requisitos para desarrollar el sitio
+
+El sitio se construye con [Astro](https://astro.build/). Para verlo y probarlo en tu computadora necesitas:
+
+| Herramienta | Versión mínima | Para qué |
+| --- | --- | --- |
+| [Node.js](https://nodejs.org/) | 22.22.0 (se recomienda la última LTS) | Ejecutar Astro y compilar el sitio |
+| npm | 9.6.5 (viene incluido con Node.js) | Instalar las dependencias del proyecto |
+| [Git](https://git-scm.com/) | Cualquier versión reciente | Clonar el repo y subir cambios |
+
+Para comprobar lo que tienes instalado:
+
+```bash
+node --version
+npm --version
+git --version
+```
+
+> Si solo vas a editar textos o agregar fotos, no necesitas instalar nada: puedes hacerlo desde la web de GitHub y el sitio se publica solo con GitHub Actions.
+
+---
+
 ## Estructura del repositorio
 
 ```
