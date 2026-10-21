@@ -1,0 +1,83 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { etiqueta } from '../lib/proyectos';
+import { url } from '../lib/url';
+import Placeholder from './Placeholder.astro';
+
+interface Props {
+  proyecto: CollectionEntry<'proyectos'>;
+}
+
+const { proyecto } = Astro.props;
+const { nombre, kanji, categoria, nivel, resumen, portada } = proyecto.data;
+---
+
+<a class="tarjeta" href={url(`proyectos/${proyecto.id}/`)}>
+  <div class="imagen">
+    {
+      portada ? (
+        <Image src={portada} alt={`Imagen de ${nombre}`} widths={[400, 800]} sizes="(min-width: 900px) 540px, 100vw" />
+      ) : (
+        <Placeholder />
+      )
+    }
+  </div>
+  <div class="cuerpo">
+    <div class="nombre">
+      <span class="titulo-display">{nombre}</span>
+      {kanji && <span class="kanji" lang="ja">{kanji}</span>}
+    </div>
+    <span class="etiqueta">{etiqueta(categoria, nivel)}</span>
+    <p>{resumen}</p>
+  </div>
+</a>
+
+<style>
+  .tarjeta {
+    display: flex;
+    flex-direction: column;
+    border: var(--borde);
+    border-radius: var(--radio);
+    background: var(--tarjeta);
+    overflow: hidden;
+    text-decoration: none;
+  }
+  .tarjeta:hover .titulo-display {
+    text-decoration: underline;
+  }
+  .imagen {
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: var(--borde);
+    overflow: hidden;
+  }
+  .imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px;
+  }
+  .cuerpo {
+    padding: 12px 14px 14px;
+  }
+  .nombre {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .nombre .titulo-display {
+    font-size: 1.9rem;
+  }
+  .nombre .kanji {
+    font-size: 1.5rem;
+  }
+  p {
+    margin: 8px 0 0;
+    font-size: 0.95rem;
+  }
+</style>

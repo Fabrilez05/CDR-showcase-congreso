@@ -1,0 +1,151 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import CifrasClave from '../../components/CifrasClave.astro';
+import FichaTecnica from '../../components/FichaTecnica.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import Video from '../../components/Video.astro';
+import Base from '../../layouts/Base.astro';
+import { etiqueta } from '../../lib/proyectos';
+import { url } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const proyectos = await getCollection('proyectos');
+  return proyectos.map((proyecto) => ({ params: { slug: proyecto.id }, props: { proyecto } }));
+}
+
+interface Props {
+  proyecto: CollectionEntry<'proyectos'>;
+}
+
+const { proyecto } = Astro.props;
+const { nombre, kanji, categoria, nivel, resumen, descripcion, portada, video, cifras, specs, pdf, enlaces, equipo } =
+  proyecto.data;
+const { Content } = await render(proyecto);
+const tieneCuerpo = (proyecto.body ?? '').trim().length > 0;
+---
+
+<Base titulo={nombre} descripcion={resumen}>
+  <p class="volver"><a href={url('/')}>← Todos los proyectos</a></p>
+
+  <div class="portada">
+    {
+      portada ? (
+        <Image src={portada} alt={`Imagen de ${nombre}`} widths={[400, 800, 1200]} sizes="(min-width: 760px) 720px, 100vw" />
+      ) : (
+        <Placeholder />
+      )
+    }
+  </div>
+
+  <div class="encabezado">
+    <h1 class="titulo-display">{nombre}</h1>
+    {kanji && <span class="kanji" lang="ja">{kanji}</span>}
+  </div>
+  <span class="etiqueta">{etiqueta(categoria, nivel)}</span>
+  <p class="descripcion">{descripcion}</p>
+
+  {cifras && cifras.length > 0 && <CifrasClave cifras={cifras} />}
+  {video && <Video src={video} />}
+
+  {
+    (specs?.length || tieneCuerpo) && (
+      <section>
+        <h2 class="seccion-titulo">Para los curiosos</h2>
+        {specs && specs.length > 0 && <FichaTecnica specs={specs} />}
+        <div class="contenido">
+          <Content />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    enlaces && enlaces.length > 0 && (
+      <ul class="enlaces">
+        {enlaces.map(({ texto, url: href }) => (
+          <li>
+            <a href={href} target="_blank" rel="noopener">
+              {texto} ↗
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    pdf && (
+      <a class="boton" href={url(pdf)} download>
+        Descargar ficha técnica (PDF)
+      </a>
+    )
+  }
+
+  {
+    equipo && equipo.length > 0 && (
+      <section>
+        <h2 class="seccion-titulo">Equipo</h2>
+        <ul>
+          {equipo.map((persona) => (
+            <li>{persona}</li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  main > * {
+    max-width: 720px;
+  }
+  .volver {
+    margin: 0.5rem 0 0.75rem;
+    font-size: 0.9rem;
+  }
+  .portada {
+    border: var(--borde);
+    border-radius: var(--radio);
+    background: var(--tarjeta);
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .portada img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12px;
+  }
+  .encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin: 1rem 0 0.4rem;
+  }
+  h1 {
+    font-size: clamp(2.4rem, 10vw, 3.6rem);
+    margin: 0;
+  }
+  .encabezado .kanji {
+    font-size: clamp(1.8rem, 8vw, 2.6rem);
+  }
+  .descripcion {
+    font-size: 1.05rem;
+  }
+  .contenido :global(p),
+  .contenido :global(ul) {
+    margin: 0.6rem 0;
+  }
+  .enlaces {
+    padding-left: 1.2rem;
+    margin: 1.5rem 0;
+  }
+  .boton {
+    margin-top: 1.5rem;
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+interface Props {
+  specs: { nombre: string; valor: string }[];
+}
+
+const { specs } = Astro.props;
+---
+
+<details class="desplegable" open>
+  <summary>Ficha técnica completa</summary>
+  <div class="desplegable-cuerpo">
+    <table>
+      <tbody>
+        {
+          specs.map(({ nombre, valor }) => (
+            <tr>
+              <th scope="row">{nombre}</th>
+              <td>{valor}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</details>
+
+<style>
+  table {
+    display: table;
+  }
+  th {
+    font-weight: 400;
+  }
+  td {
+    text-align: right;
+  }
+</style>

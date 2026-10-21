@@ -1,7 +1,53 @@
 ---
+import { getCollection } from 'astro:content';
+import TarjetaProyecto from '../components/TarjetaProyecto.astro';
 import Base from '../layouts/Base.astro';
+import { separarYOrdenar } from '../lib/proyectos';
+
+const { competencia, extras } = separarYOrdenar(await getCollection('proyectos'));
 ---
 
 <Base titulo="Proyectos">
   <h1 class="titulo-display">Proyectos del CDR</h1>
+  <p class="subtitulo">
+    Club de Robótica de la Facultad Politécnica (UNA, Paraguay) en el 25.º Congreso Internacional de Mecatrónica.
+  </p>
+
+  <h2 class="seccion-titulo">Competencia</h2>
+  <div class="grilla">
+    {competencia.map((proyecto) => <TarjetaProyecto proyecto={proyecto} />)}
+  </div>
+
+  {
+    extras.length > 0 && (
+      <>
+        <h2 class="seccion-titulo">Extras</h2>
+        <div class="grilla">
+          {extras.map((proyecto) => (
+            <TarjetaProyecto proyecto={proyecto} />
+          ))}
+        </div>
+      </>
+    )
+  }
 </Base>
+
+<style>
+  h1 {
+    font-size: clamp(2.6rem, 11vw, 4.5rem);
+    margin: 1rem 0 0.5rem;
+  }
+  .subtitulo {
+    margin: 0;
+    max-width: 40rem;
+  }
+  .grilla {
+    display: grid;
+    gap: 16px;
+  }
+  @media (min-width: 900px) {
+    .grilla {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

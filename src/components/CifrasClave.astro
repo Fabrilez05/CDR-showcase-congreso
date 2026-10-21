@@ -1,0 +1,46 @@
+---
+interface Props {
+  cifras: { valor: string; etiqueta: string }[];
+}
+
+const { cifras } = Astro.props;
+---
+
+<dl class="cifras">
+  {
+    cifras.map(({ valor, etiqueta }) => (
+      <div>
+        <dd class="mono">{valor}</dd>
+        <dt>{etiqueta}</dt>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .cifras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 8px;
+    margin: 1rem 0;
+  }
+  .cifras div {
+    display: flex;
+    flex-direction: column-reverse;
+    border: 1.5px solid var(--tinta);
+    border-radius: 8px;
+    background: var(--tarjeta);
+    padding: 8px;
+    text-align: center;
+  }
+  dd {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  dt {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>

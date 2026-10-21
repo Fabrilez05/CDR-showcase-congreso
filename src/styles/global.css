@@ -133,6 +133,10 @@ code {
   overflow-wrap: anywhere;
 }
 
+td code {
+  white-space: nowrap;
+}
+
 .boton {
   display: block;
   text-align: center;

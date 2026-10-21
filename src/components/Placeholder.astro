@@ -1,0 +1,24 @@
+---
+interface Props {
+  texto?: string;
+}
+
+const { texto = 'Foto próximamente' } = Astro.props;
+---
+
+<div class="placeholder" role="img" aria-label={texto}>{texto}</div>
+
+<style>
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: repeating-linear-gradient(45deg, var(--rayado) 0 8px, transparent 8px 16px);
+  }
+</style>
