@@ -26,79 +26,82 @@ const tieneCuerpo = (proyecto.body ?? '').trim().length > 0;
 ---
 
 <Base titulo={nombre} descripcion={resumen}>
-  <p class="volver"><a href={url('/')}>← Todos los proyectos</a></p>
+  <article class="ficha">
+    <p class="volver"><a href={url('/')}>← Todos los proyectos</a></p>
 
-  <div class="portada">
+    <div class="portada">
+      {
+        portada ? (
+          <Image src={portada} alt={`Imagen de ${nombre}`} widths={[400, 800, 1200]} sizes="(min-width: 760px) 720px, 100vw" />
+        ) : (
+          <Placeholder />
+        )
+      }
+    </div>
+
+    <div class="encabezado">
+      <h1 class="titulo-display">{nombre}</h1>
+      {kanji && <span class="kanji" lang="ja">{kanji}</span>}
+    </div>
+    <span class="etiqueta">{etiqueta(categoria, nivel)}</span>
+    <p class="descripcion">{descripcion}</p>
+
+    {cifras && cifras.length > 0 && <CifrasClave cifras={cifras} />}
+    {video && <Video src={video} />}
+
     {
-      portada ? (
-        <Image src={portada} alt={`Imagen de ${nombre}`} widths={[400, 800, 1200]} sizes="(min-width: 760px) 720px, 100vw" />
-      ) : (
-        <Placeholder />
+      (specs?.length || tieneCuerpo) && (
+        <section>
+          <h2 class="seccion-titulo">Para los curiosos</h2>
+          {specs && specs.length > 0 && <FichaTecnica specs={specs} />}
+          <div class="contenido">
+            <Content />
+          </div>
+        </section>
       )
     }
-  </div>
 
-  <div class="encabezado">
-    <h1 class="titulo-display">{nombre}</h1>
-    {kanji && <span class="kanji" lang="ja">{kanji}</span>}
-  </div>
-  <span class="etiqueta">{etiqueta(categoria, nivel)}</span>
-  <p class="descripcion">{descripcion}</p>
-
-  {cifras && cifras.length > 0 && <CifrasClave cifras={cifras} />}
-  {video && <Video src={video} />}
-
-  {
-    (specs?.length || tieneCuerpo) && (
-      <section>
-        <h2 class="seccion-titulo">Para los curiosos</h2>
-        {specs && specs.length > 0 && <FichaTecnica specs={specs} />}
-        <div class="contenido">
-          <Content />
-        </div>
-      </section>
-    )
-  }
-
-  {
-    enlaces && enlaces.length > 0 && (
-      <ul class="enlaces">
-        {enlaces.map(({ texto, url: href }) => (
-          <li>
-            <a href={href} target="_blank" rel="noopener">
-              {texto} ↗
-            </a>
-          </li>
-        ))}
-      </ul>
-    )
-  }
-
-  {
-    pdf && (
-      <a class="boton" href={url(pdf)} download>
-        Descargar ficha técnica (PDF)
-      </a>
-    )
-  }
-
-  {
-    equipo && equipo.length > 0 && (
-      <section>
-        <h2 class="seccion-titulo">Equipo</h2>
-        <ul>
-          {equipo.map((persona) => (
-            <li>{persona}</li>
+    {
+      enlaces && enlaces.length > 0 && (
+        <ul class="enlaces">
+          {enlaces.map(({ texto, url: href }) => (
+            <li>
+              <a href={href} target="_blank" rel="noopener">
+                {texto} ↗
+              </a>
+            </li>
           ))}
         </ul>
-      </section>
-    )
-  }
+      )
+    }
+
+    {
+      pdf && (
+        <a class="boton" href={url(pdf)} download>
+          Descargar ficha técnica (PDF)
+        </a>
+      )
+    }
+
+    {
+      equipo && equipo.length > 0 && (
+        <section>
+          <h2 class="seccion-titulo">Equipo</h2>
+          <ul>
+            {equipo.map((persona) => (
+              <li>{persona}</li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
 </Base>
 
 <style>
-  main > * {
+  .ficha {
     max-width: 720px;
+    margin: 0 auto;
   }
   .volver {
     margin: 0.5rem 0 0.75rem;

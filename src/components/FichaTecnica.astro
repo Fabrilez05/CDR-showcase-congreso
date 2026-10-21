@@ -9,7 +9,7 @@ const { specs } = Astro.props;
 <details class="desplegable" open>
   <summary>Ficha técnica completa</summary>
   <div class="desplegable-cuerpo">
-    <table>
+    <table class="tabla-ficha">
       <tbody>
         {
           specs.map(({ nombre, valor }) => (
@@ -25,7 +25,7 @@ const { specs } = Astro.props;
 </details>
 
 <style>
-  table {
+  .desplegable-cuerpo .tabla-ficha {
     display: table;
   }
   th {
