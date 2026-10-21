@@ -1,0 +1,76 @@
+---
+import '../styles/global.css';
+import { url } from '../lib/url';
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+  sinChrome?: boolean;
+}
+
+const {
+  titulo,
+  descripcion = 'Proyectos del Club de Robótica de la FP-UNA en el 25.º Congreso Internacional de Mecatrónica.',
+  sinChrome = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={descripcion} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+    <title>{titulo} · CDR FP-UNA</title>
+  </head>
+  <body>
+    {
+      !sinChrome && (
+        <header class="contenedor barra">
+          <a href={url('/')}>CDR · FP-UNA</a>
+          <span>22–24 OCT</span>
+        </header>
+      )
+    }
+    <main class="contenedor">
+      <slot />
+    </main>
+    {
+      !sinChrome && (
+        <footer class="contenedor pie">
+          <p>Club de Robótica · Facultad Politécnica · Universidad Nacional de Asunción</p>
+          <p>
+            <a href="https://github.com/Fabrilez05/CDR-showcase-congreso">Código del sitio en GitHub</a>
+          </p>
+        </footer>
+      )
+    }
+  </body>
+</html>
+
+<style>
+  .barra {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .barra a {
+    text-decoration: none;
+  }
+  .pie {
+    margin-top: 3rem;
+    padding-bottom: 2rem;
+    font-size: 0.85rem;
+    border-top: 1.5px solid var(--tinta);
+  }
+  .pie p {
+    margin: 0.6rem 0 0;
+  }
+</style>
