@@ -2,57 +2,59 @@
 nombre: Minos
 categoria: micromouse
 orden: 3
-resumen: Micromouse autónomo con sensores infrarrojos, encoders y control PID.
+resumen: Micromouse autónomo que explora el laberinto, lo mapea y calcula la ruta con flood fill.
 descripcion: >-
-  Minos es nuestro micromouse: un robot autónomo pensado para recorrer
-  laberintos. En el stand lo vas a ver en un laberinto pequeño de demostración y
-  en modo "sigue la mano", donde detecta tu mano con sensores infrarrojos y
-  avanza recto gracias a un control PID basado en encoders.
+  Minos es nuestro micromouse: un robot autónomo que recorre un laberinto sin
+  ayuda. En el stand lo vas a ver explorar el laberinto de demostración, detectar
+  las paredes con sensores infrarrojos, dibujar el mapa en su memoria y decidir
+  el camino al centro con el algoritmo flood fill. Al llegar, regresa solo a la
+  casilla de inicio.
 cifras:
-  - { valor: "20 ms", etiqueta: Ciclo de control }
-  - { valor: "60 ms", etiqueta: Antirrebote }
-  - { valor: PID, etiqueta: Control }
+  - { valor: "16 × 16", etiqueta: Laberinto configurable }
+  - { valor: "Flood fill", etiqueta: Algoritmo }
+  - { valor: "4 × IR", etiqueta: Sensores de pared }
 specs:
   - { nombre: Microcontrolador, valor: ESP32 }
-  - { nombre: Sensores, valor: "4 × infrarrojos (2 frontales, 2 laterales)" }
-  - { nombre: Odometría, valor: "2 × encoders" }
-  - { nombre: Control, valor: "PID sobre la diferencia de ticks" }
-  - { nombre: PWM, valor: "1 kHz, 8 bits" }
-  - { nombre: Activación, valor: "DIP switch en 0001" }
+  - { nombre: Sensores, valor: "4 × infrarrojos digitales (2 frontales, 2 laterales)" }
+  - { nombre: Odometría, valor: "2 × encoders flying-fish" }
+  - { nombre: Control, valor: "Proporcional sobre la diferencia de ticks" }
+  - { nombre: PWM, valor: "20 kHz, 8 bits" }
+  - { nombre: Navegación, valor: "Flood fill con mapa de paredes en tiempo real" }
 ---
 
-## Cómo sigue la mano
+## Cómo resuelve el laberinto
 
-Solo funciona con el DIP switch en `0001`; con cualquier otro valor los motores se detienen.
+1. **Inicio:** espera 3 s para colocarlo en la esquina inferior izquierda mirando al norte.
+2. **Sensado:** en cada celda lee los infrarrojos y anota las paredes de enfrente, izquierda y derecha. La pared frontal solo cuenta si ambos sensores frontales la detectan.
+3. **Flood fill:** recalcula la distancia de cada celda a la meta.
+4. **Decisión:** avanza hacia la celda vecina con menor distancia y sin pared; en caso de empate prefiere seguir recto.
+5. **Movimiento:** gira 90° o avanza una celda contando ticks de los encoders.
 
-| Estado | Cuándo | Qué hace |
-| --- | --- | --- |
-| `FORWARD` | Ambos sensores frontales detectan | Avanza recto con corrección PID |
-| `STEER_L` | Solo el frontal izquierdo | Gira a la izquierda |
-| `STEER_R` | Solo el frontal derecho | Gira a la derecha |
-| `IDLE` | Ninguno | Detenido |
+El recorrido tiene dos fases: primero va al centro del laberinto (las 4 celdas centrales) y después regresa a la casilla de inicio. Si queda sin ruta posible, se detiene y lo avisa por el monitor serie.
 
-Cada sensor tiene que detectar durante 3 ciclos seguidos (60 ms) para contar, así se ignora la luz infrarroja ambiental.
+## Avance recto
 
-## Control PID
+Para ir recto, Minos compara los ticks de las dos ruedas y corrige la velocidad de cada motor con un control proporcional (`Kp = 2.0`). Los giros de 90° se hacen por conteo de ticks, sin giroscopio.
 
-El PID mantiene las dos ruedas sincronizadas comparando los ticks de los encoders en cada ciclo de 20 ms:
-
-- Error: `err = dL - dR` (ticks por periodo de cada rueda).
-- Constantes: `Kp = 8.0`, `Ki = 0.5`, `Kd = 2.0`.
-- Depuración por monitor serie a 115200 baudios.
+| Parámetro | Valor |
+| --- | --- |
+| Velocidad de crucero | 120 de 255 |
+| Velocidad de giro | 110 de 255 |
+| Ticks por celda | 40 |
+| Ticks por giro de 90° | 14 |
 
 ## Pines y electrónica
 
 | Función | Pines |
 | --- | --- |
-| Motor izquierdo (adelante / atrás) | 12 / 13 |
+| Motor izquierdo (adelante / atrás) | 13 / 12 |
 | Motor derecho (adelante / atrás) | 27 / 14 |
 | IR frontales (derecho / izquierdo) | 25 / 26 |
 | IR laterales (izquierdo / derecho) | 32 / 35 |
 | Encoders (izquierdo / derecho) | 36 / 39 |
-| DIP switch (1 a 4) | 23, 22, 21, 19 |
 
 ## Limitaciones
 
-Los sensores son digitales (detectan presencia, no distancia) y los encoders no detectan el sentido de giro, así que el PID solo se usa para avanzar.
+- Los sensores son digitales: detectan presencia de pared, no distancia, así que no centra al robot entre paredes.
+- Los giros son a lazo abierto, por lo que el error se acumula con el tiempo.
+- Hace una sola pasada de exploración; todavía no tiene carrera rápida por la ruta más corta.
