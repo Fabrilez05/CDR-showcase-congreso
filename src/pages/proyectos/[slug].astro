@@ -6,6 +6,7 @@ import FichaTecnica from '../../components/FichaTecnica.astro';
 import Placeholder from '../../components/Placeholder.astro';
 import Video from '../../components/Video.astro';
 import Base from '../../layouts/Base.astro';
+import { urlArchivo } from '../../lib/archivos';
 import { etiqueta } from '../../lib/proyectos';
 import { url } from '../../lib/url';
 
@@ -47,7 +48,7 @@ const tieneCuerpo = (proyecto.body ?? '').trim().length > 0;
     <p class="descripcion">{descripcion}</p>
 
     {cifras && cifras.length > 0 && <CifrasClave cifras={cifras} />}
-    {video && <Video src={video} />}
+    {video && <Video src={urlArchivo(video)} />}
 
     {
       (specs?.length || tieneCuerpo) && (
@@ -77,7 +78,7 @@ const tieneCuerpo = (proyecto.body ?? '').trim().length > 0;
 
     {
       pdf && (
-        <a class="boton" href={url(pdf)} download>
+        <a class="boton" href={urlArchivo(pdf)} download={`${proyecto.id}-ficha-tecnica.pdf`}>
           Descargar ficha técnica (PDF)
         </a>
       )

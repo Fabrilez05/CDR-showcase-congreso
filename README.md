@@ -65,12 +65,12 @@ orden: 1                       # obligatorio, orden dentro de su sección
 resumen: Una línea para la tarjeta de la portada (máx. 160 caracteres).
 descripcion: Un párrafo para el público general.
 portada: ../../assets/proyectos/raiden/render.png    # opcional; sin ella se ve "Foto próximamente"
-video: videos/raiden.mp4       # opcional, archivo dentro de public/
+video: ../../assets/proyectos/raiden/video.mp4   # opcional
 cifras:                        # opcional, máximo 3
   - { valor: "500 g", etiqueta: Peso }
 specs:                         # opcional, tabla "Ficha técnica completa"
   - { nombre: Peso, valor: "500 g" }
-pdf: fichas/raiden.pdf         # opcional, archivo dentro de public/
+pdf: ../../assets/proyectos/raiden/ficha.pdf     # opcional
 enlaces:                       # opcional
   - { texto: "Repositorio", url: "https://github.com/..." }
 equipo: [Nombre Apellido]      # opcional
@@ -79,11 +79,7 @@ equipo: [Nombre Apellido]      # opcional
 
 Debajo va el detalle técnico en Markdown normal. **Cada título `##` se convierte en un desplegable** en la página del proyecto.
 
-**Dónde van los archivos:**
-
-- Fotos e imágenes: `src/assets/proyectos/<id>/` (el sitio las optimiza para el celular).
-- Videos: `public/videos/` (conviene `.mp4` cortos, de menos de 20 MB).
-- PDF: `public/fichas/`.
+**Dónde van los archivos:** todo lo de un proyecto (fotos, PDF y videos) va junto en `src/assets/proyectos/<id>/`, y en el encabezado se escribe la ruta relativa al `.md` (`../../assets/proyectos/<id>/...`). Las imágenes se optimizan para el celular; los videos conviene que sean `.mp4` cortos, de menos de 20 MB. Si la ruta apunta a un archivo que no existe, el build falla.
 
 ## Imprimir los QR
 
@@ -96,17 +92,18 @@ Abre `/qr/` en el navegador e imprime en A4. Cada QR lleva a la página de su pr
 ```
 .
 ├── .github/workflows/deploy.yml   # build y publicación en GitHub Pages
-├── public/                        # archivos que se publican tal cual (PDF, videos, favicon)
+├── public/                        # archivos que se publican tal cual (favicon)
 ├── scripts/check-links.mjs        # verifica que no haya links internos rotos
 ├── src/
 │   ├── content/proyectos/         # un .md por proyecto
-│   ├── assets/proyectos/          # imágenes de cada proyecto
+│   ├── assets/
+│   │   ├── proyectos/<id>/        # imágenes, PDF y videos de cada proyecto
+│   │   └── originales/cdrrr.pdf   # fichas técnicas originales (no se publica)
 │   ├── components/                # tarjeta, cifras, ficha técnica, video, placeholder
 │   ├── layouts/Base.astro         # estructura común de todas las páginas
 │   ├── lib/                       # helpers (URLs, orden, desplegables) con sus tests
 │   ├── pages/                     # portada, /proyectos/<id>/, /qr/ y 404
 │   └── styles/global.css          # estilo "papel técnico" y modo oscuro
-├── cdrrr.pdf                      # fichas técnicas originales (no se publica)
 └── docs/superpowers/              # diseño y plan de implementación
 ```
 

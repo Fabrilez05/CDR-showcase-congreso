@@ -10,7 +10,7 @@ descripcion: >-
   y vos tenés que repetirla con los botones de colores. Cada ronda la secuencia
   se alarga. Antes de empezar podés elegir el nivel de dificultad.
 portada: ../../assets/proyectos/simon-dice/diagrama.png
-pdf: fichas/simon-dice.pdf
+pdf: ../../assets/proyectos/simon-dice/ficha.pdf
 ---
 
 ## Componentes

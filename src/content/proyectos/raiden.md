@@ -25,7 +25,7 @@ specs:
   - { nombre: Batería, valor: "Li-Po 7,4 V, 1200 mAh, 20C" }
   - { nombre: Ruedas, valor: "Ø 27,52 mm exterior / Ø 22,52 mm interior" }
   - { nombre: Estructura, valor: Chasis con cuña frontal }
-pdf: fichas/raiden.pdf
+pdf: ../../assets/proyectos/raiden/ficha.pdf
 ---
 
 ## Modos de manejo

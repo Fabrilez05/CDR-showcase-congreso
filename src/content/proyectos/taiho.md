@@ -25,7 +25,7 @@ specs:
   - { nombre: Batería, valor: "Li-Po 7,4 V, 1200 mAh, 20C" }
   - { nombre: Ruedas, valor: "Ø 40,6 mm exterior / Ø 36,6 mm interior" }
   - { nombre: Estructura, valor: Chasis con cuña frontal }
-pdf: fichas/taiho.pdf
+pdf: ../../assets/proyectos/taiho/ficha.pdf
 ---
 
 ## Amateur y pro

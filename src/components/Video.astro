@@ -1,6 +1,4 @@
 ---
-import { url } from '../lib/url';
-
 interface Props {
   src: string;
 }
@@ -8,7 +6,7 @@ interface Props {
 const { src } = Astro.props;
 ---
 
-<video class="video" src={url(src)} controls preload="metadata" playsinline></video>
+<video class="video" src={src} controls preload="metadata" playsinline></video>
 
 <style>
   .video {
