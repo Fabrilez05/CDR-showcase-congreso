@@ -10,7 +10,7 @@ Sitio web con los proyectos que el **Club de Robótica de la Facultad Politécni
 | Raiden (雷電) | Sumobot pro | Competencia |
 | Taiho (大鵬) | Sumobot amateur | Competencia |
 | Minos | Micromouse | Competencia |
-| Ajedrez inteligente | Ajedrez | Competencia |
+| Magnus | Ajedrez inteligente | Competencia |
 | Telemaco | Futbot BLE | Extras |
 | Simón dice | Juego | Extras |
 

@@ -25,6 +25,7 @@ const { cifras } = Astro.props;
     margin: 1rem 0;
   }
   .cifras div {
+    min-width: 0;
     display: flex;
     flex-direction: column-reverse;
     border: 1.5px solid var(--tinta);
@@ -35,6 +36,7 @@ const { cifras } = Astro.props;
   }
   dd {
     margin: 0;
+    overflow-wrap: anywhere;
     font-size: 1.3rem;
     font-weight: 700;
   }
