@@ -1,133 +1,20 @@
-# 🤖 Proyectos de robótica para el congreso
+# 🤖 Proyectos del CDR para el congreso
 
-Sitio web con los proyectos que presentaremos en el congreso: **2 sumobots** (uno amateur y uno avanzado), **1 micromouse**, **2 futbots** y **1 ajedrez inteligente**.
+Sitio web con los proyectos que el **Club de Robótica de la Facultad Politécnica (FP-UNA)** presenta en el **25.º Congreso Internacional de Mecatrónica** (22 al 24 de octubre de 2026, México).
 
-🌐 **Sitio:** `https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/`
+🌐 **Sitio:** <https://fabrilez05.github.io/CDR-showcase-congreso/>
+🖨️ **QR para imprimir:** <https://fabrilez05.github.io/CDR-showcase-congreso/qr/>
 
----
-
-## Proyectos
-
-| Categoría | Cantidad | Documentación |
-| --- | :---: | --- |
-| Sumobot | 2 (amateur y avanzado) | Pendiente |
-| Micromouse | 1 | Pendiente |
-| Futbot | 2 | Pendiente |
-| Ajedrez inteligente | 1 | Pendiente |
-
-Robots documentados hasta ahora (todos basados en **ESP32**):
-
-| Robot | Qué hace | Control |
+| Proyecto | Categoría | Sección |
 | --- | --- | --- |
-| [Telemaco](#telemaco) | Robot diferencial controlado desde un joystick web | Bluetooth Low Energy (BLE) |
-| [Minos](#minos) | Robot que sigue una mano con sensores infrarrojos | Autónomo (IR + encoders + PID) |
-| [Raiden](#raiden) | Robot diferencial con varios modos de manejo | Mando Bluetooth (Bluepad32) |
+| Raiden (雷電) | Sumobot pro | Competencia |
+| Taiho (大鵬) | Sumobot amateur | Competencia |
+| Minos | Micromouse | Competencia |
+| Ajedrez inteligente | Ajedrez | Competencia |
+| Telemaco | Futbot BLE | Extras |
+| Simón dice | Juego | Extras |
 
-Joystick web para controlar robots por BLE: [hermes-ble-joystick](https://github.com/Fabrilez05/hermes-ble-joystick)
-
----
-
-## Telemaco
-
-Robot de tracción diferencial controlado por **BLE**. El ESP32 actúa como servidor BLE y recibe coordenadas de un joystick virtual (web o móvil).
-
-- **Nombre BLE:** `Telemaco`
-- **Service UUID:** `d3f8007e-c032-43ef-90f7-b042e9910fff`
-- **Characteristic RX:** `f85ba695-b4ec-42cf-8127-1c08d2fbce99` (`WRITE` y `WRITE_NR`)
-- **Mensaje:** texto con formato `X:0.50,Y:-0.80`, con valores de `-1.0` a `1.0`.
-
-**Pines (puente H):**
-
-| Motor | Adelante | Atrás |
-| --- | :---: | :---: |
-| Izquierdo | 32 | 33 |
-| Derecho | 25 | 26 |
-
-**Control:**
-
-1. Zona muerta de `0.05` en ambos ejes.
-2. Mezcla diferencial: izquierda = `Y - X`, derecha = `Y + X`.
-3. Límite a `-1.0..1.0` y conversión a PWM de 8 bits (0-255).
-
-**Seguridad:**
-
-- *Watchdog:* si pasan más de **250 ms** sin recibir comandos, los motores se detienen.
-- Al desconectarse el cliente BLE, los motores se detienen y el robot vuelve a anunciarse.
-
----
-
-## Minos
-
-Robot diferencial que **sigue una mano** con sensores infrarrojos y avanza recto con un **PID basado en encoders**. Sketch: `MinosHandFollowTest.ino`.
-
-**Activación:** solo funciona con el DIP switch en `0001`; con cualquier otro valor los motores se detienen.
-
-**Máquina de estados:**
-
-| Estado | Condición | Acción |
-| --- | --- | --- |
-| `FORWARD` | Ambos sensores frontales detectan | Avanza con corrección PID |
-| `STEER_L` | Solo el frontal izquierdo | Gira a la izquierda |
-| `STEER_R` | Solo el frontal derecho | Gira a la derecha |
-| `IDLE` | Ninguno | Detenido |
-
-**Detalles técnicos:**
-
-- Ciclo de control cada 20 ms.
-- Antirrebote: cada sensor debe detectar durante 3 ciclos seguidos (60 ms).
-- PID de línea recta: `err = dL - dR` (ticks de encoder por periodo), con `Kp = 8.0`, `Ki = 0.5`, `Kd = 2.0`.
-- PWM de 1 kHz y 8 bits.
-- Depuración por monitor serie a 115200 baudios.
-
-**Pines:**
-
-| Función | Pines |
-| --- | --- |
-| Motor izquierdo (adelante / atrás) | 12 / 13 |
-| Motor derecho (adelante / atrás) | 27 / 14 |
-| IR frontales (derecho / izquierdo) | 25 / 26 |
-| IR laterales (izquierdo / derecho) | 32 / 35 |
-| Encoders (izquierdo / derecho) | 36 / 39 |
-| DIP switch (1 a 4) | 23, 22, 21, 19 |
-
-**Limitaciones:** los sensores son digitales (detectan presencia, no distancia) y los encoders no detectan el sentido de giro, así que el PID solo sirve para avanzar.
-
----
-
-## Raiden
-
-Robot de tracción diferencial controlado con un **mando Bluetooth** mediante la librería **Bluepad32**. Sketch: `Raiden.ino`.
-
-**Pines (puente H):**
-
-| Motor | Adelante | Atrás | `minPwm` |
-| --- | :---: | :---: | :---: |
-| Izquierdo | 12 | 13 | 80 |
-| Derecho | 27 | 14 | 80 |
-
-**Modos de manejo** (se eligen con **L1 + cruceta**):
-
-| Combinación | Modo | Descripción |
-| --- | --- | --- |
-| L1 + arriba | Arcade normal | Giro con una palanca |
-| L1 + derecha | Tanque normal | Palancas independientes |
-| L1 + abajo | Arcade stutter | Al avanzar alterna izquierda y derecha |
-| L1 + izquierda | Tanque stutter | Los dos motores avanzan y paran de forma alternada |
-
-En los modos *stutter*, mantener **R2** desactiva el efecto para tener tracción total.
-
-**Seguridad:** los motores se detienen si el mando se desconecta y al cambiar de modo.
-
-**Estado conocido:** la reversa del motor derecho está en revisión (el software envía PWM correctamente, el problema está entre el pin 14, el driver y el motor).
-
----
-
-## Hardware común
-
-- Microcontrolador **ESP32**.
-- Puente H con dos pines PWM por motor (adelante y atrás).
-- GND común entre batería, driver y ESP32.
-- Recomendado: capacitor de 470 a 1000 µF en la alimentación del driver y 100 nF en cada motor, para evitar caídas de voltaje (*brownout*).
+La documentación técnica de cada robot está en `src/content/proyectos/` y se ve en el sitio.
 
 ---
 
@@ -151,23 +38,84 @@ git --version
 
 > Si solo vas a editar textos o agregar fotos, no necesitas instalar nada: puedes hacerlo desde la web de GitHub y el sitio se publica solo con GitHub Actions.
 
+## Desarrollo local
+
+```bash
+npm install      # instala las dependencias (solo la primera vez)
+npm run dev      # abre el sitio en http://localhost:4321/CDR-showcase-congreso/
+npm run ci       # tests + chequeo de tipos + build + verificación de links (lo mismo que corre GitHub)
+```
+
+---
+
+## Agregar o editar un proyecto
+
+Cada proyecto es un archivo Markdown en `src/content/proyectos/<id>.md`. El nombre del archivo es la URL: `raiden.md` → `/proyectos/raiden/`.
+
+Arriba va un encabezado con los datos (si falta un campo obligatorio o está mal escrito, el build falla y te dice qué archivo y qué campo):
+
+```yaml
+---
+nombre: Raiden                 # obligatorio
+kanji: 雷電                    # opcional
+categoria: sumobot             # obligatorio: sumobot | micromouse | futbot | ajedrez | otro
+nivel: Pro                     # opcional, se suma a la etiqueta ("Sumobot · Pro")
+extra: false                   # true → aparece en "Extras"
+orden: 1                       # obligatorio, orden dentro de su sección
+resumen: Una línea para la tarjeta de la portada (máx. 160 caracteres).
+descripcion: Un párrafo para el público general.
+portada: ../../assets/proyectos/raiden/render.png    # opcional; sin ella se ve "Foto próximamente"
+video: videos/raiden.mp4       # opcional, archivo dentro de public/
+cifras:                        # opcional, máximo 3
+  - { valor: "500 g", etiqueta: Peso }
+specs:                         # opcional, tabla "Ficha técnica completa"
+  - { nombre: Peso, valor: "500 g" }
+pdf: fichas/raiden.pdf         # opcional, archivo dentro de public/
+enlaces:                       # opcional
+  - { texto: "Repositorio", url: "https://github.com/..." }
+equipo: [Nombre Apellido]      # opcional
+---
+```
+
+Debajo va el detalle técnico en Markdown normal. **Cada título `##` se convierte en un desplegable** en la página del proyecto.
+
+**Dónde van los archivos:**
+
+- Fotos e imágenes: `src/assets/proyectos/<id>/` (el sitio las optimiza para el celular).
+- Videos: `public/videos/` (conviene `.mp4` cortos, de menos de 20 MB).
+- PDF: `public/fichas/`.
+
+## Imprimir los QR
+
+Abre `/qr/` en el navegador e imprime en A4. Cada QR lleva a la página de su proyecto.
+
 ---
 
 ## Estructura del repositorio
 
 ```
 .
-├── index.html     # Página del congreso
-└── README.md      # Este archivo
+├── .github/workflows/deploy.yml   # build y publicación en GitHub Pages
+├── public/                        # archivos que se publican tal cual (PDF, videos, favicon)
+├── scripts/check-links.mjs        # verifica que no haya links internos rotos
+├── src/
+│   ├── content/proyectos/         # un .md por proyecto
+│   ├── assets/proyectos/          # imágenes de cada proyecto
+│   ├── components/                # tarjeta, cifras, ficha técnica, video, placeholder
+│   ├── layouts/Base.astro         # estructura común de todas las páginas
+│   ├── lib/                       # helpers (URLs, orden, desplegables) con sus tests
+│   ├── pages/                     # portada, /proyectos/<id>/, /qr/ y 404
+│   └── styles/global.css          # estilo "papel técnico" y modo oscuro
+├── cdrrr.pdf                      # fichas técnicas originales (no se publica)
+└── docs/superpowers/              # diseño y plan de implementación
 ```
 
-## Publicar en GitHub Pages
+## Publicación
 
-1. Sube `index.html` y `README.md` a la rama `main`.
-2. Ve a **Settings → Pages**.
-3. En *Source* elige **Deploy from a branch**, rama `main`, carpeta `/ (root)`.
-4. Espera un minuto y abre la URL que aparece.
+Cada push a `main` dispara GitHub Actions, que corre `npm run ci` y, si todo pasa, publica en GitHub Pages. **Si el build falla, no se publica nada y el sitio anterior sigue online.**
+
+Configuración única (la hace quien administra el repo): **Settings → Pages → Source: GitHub Actions**.
 
 ## Autor
 
-[Fabrilez05](https://github.com/Fabrilez05)
+[Fabrilez05](https://github.com/Fabrilez05) y el Club de Robótica de la FP-UNA.
