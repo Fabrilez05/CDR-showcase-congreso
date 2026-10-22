@@ -20,7 +20,9 @@ specs:
   - { nombre: Control, valor: "Proporcional sobre la diferencia de ticks" }
   - { nombre: PWM, valor: "20 kHz, 8 bits" }
   - { nombre: Navegación, valor: "Flood fill con mapa de paredes en tiempo real" }
+pdf: ../../assets/proyectos/minos/ficha.pdf
 ---
+
 
 ## Cómo resuelve el laberinto
 
