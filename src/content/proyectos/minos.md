@@ -9,6 +9,7 @@ descripcion: >-
   las paredes con sensores infrarrojos, dibujar el mapa en su memoria y decidir
   el camino al centro con el algoritmo flood fill. Al llegar, regresa solo a la
   casilla de inicio.
+portada: ../../assets/proyectos/minos/render.png
 cifras:
   - { valor: "16 × 16", etiqueta: Laberinto configurable }
   - { valor: "Flood fill", etiqueta: Algoritmo }
