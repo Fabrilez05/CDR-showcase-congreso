@@ -9,7 +9,7 @@ descripcion: >-
   tus jugadas, te muestra adónde puede ir la pieza que levantaste y lleva el
   reloj. Podés jugar contra un amigo o contra Magnus, que elige sus jugadas con el
   motor Stockfish.
-portada: ../../assets/proyectos/ajedrez/menu-principal.jpg
+portada: ../../assets/proyectos/ajedrez/render.jpg
 cifras:
   - { valor: "64", etiqueta: Sensores Hall }
   - { valor: "64", etiqueta: LEDs RGB }
@@ -34,6 +34,8 @@ Las jugadas se arman moviendo las piezas y **cuentan recién al apretar el botó
 
 - Si la posición es una jugada legal, se aplica y pasa el turno.
 - Si no, el botón no hace nada y los LEDs muestran qué corregir.
+
+![Boceto del menú principal en la pantalla de 480 × 320](../../assets/proyectos/ajedrez/menu-principal.jpg)
 
 En el menú se elige el rival: **contra un amigo**, con reloj de 3, 5 o 10 minutos, o **contra Magnus**. La promoción es siempre a dama, porque los sensores detectan que hay una pieza, no cuál es.
 

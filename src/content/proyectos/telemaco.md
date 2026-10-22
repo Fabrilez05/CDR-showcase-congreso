@@ -9,6 +9,7 @@ descripcion: >-
   Telemaco es un futbot de tracción diferencial que se controla desde el
   celular: abrís una página web con un joystick virtual, te conectás por
   Bluetooth Low Energy y listo, sin instalar ninguna app.
+portada: ../../assets/proyectos/telemaco/render.jpg
 cifras:
   - { valor: "250 ms", etiqueta: Watchdog }
   - { valor: BLE, etiqueta: Conexión }
